@@ -64,3 +64,59 @@ const images = [
       },
     ];
     
+    
+
+const gallery = document.querySelector('.gallery');
+
+gallery.addEventListener('click', bigPictureClick);
+
+function bigPictureClick(event) {
+  event.preventDefault();
+
+  if (event.currentTarget === event.target) {
+    return;
+  }
+
+  const elem = event.target.closest(".gallery-image")
+
+  if (!elem) {
+    return;
+  }
+
+  const largeImageUrl = elem.dataset.source;
+
+  const instance = basicLightbox.create(`
+      <div class="modal">
+      <img src="${largeImageUrl}" alt="">
+      </div> `);
+
+  instance.show();
+  
+  const modalImage = instance.element().querySelector('img');
+  modalImage.addEventListener('click', () => {
+    instance.close();
+  });
+  }
+  
+
+
+function createGalleryItems(images) {
+  return images
+    .map(
+      ({ preview, original, description }) => `
+          <li class="gallery-item">
+            <a class="gallery-link" href="${original}">
+              <img
+              class="gallery-image"
+              src="${preview}" 
+              data-source="${original}" 
+              alt="${description}" />
+            </a>
+          </li> `
+    )
+    .join('');
+}
+    
+    
+    gallery.innerHTML = createGalleryItems(images);
+    
